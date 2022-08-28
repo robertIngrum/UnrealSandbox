@@ -7,6 +7,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
 #include "GameFramework/InputSettings.h"
+#include "FPSBombActor.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -58,6 +59,9 @@ void AUnrealSandboxCharacter::SetupPlayerInputComponent(class UInputComponent* P
 	// Bind fire event
 	PlayerInputComponent->BindAction("PrimaryAction", IE_Pressed, this, &AUnrealSandboxCharacter::OnPrimaryAction);
 
+	// Bind bomb event
+	PlayerInputComponent->BindAction("SecondaryAction", IE_Pressed, this, &AUnrealSandboxCharacter::OnSecondaryAction);
+
 	// Enable touchscreen input
 	EnableTouchscreenMovement(PlayerInputComponent);
 
@@ -78,6 +82,12 @@ void AUnrealSandboxCharacter::OnPrimaryAction()
 {
 	// Trigger the OnItemUsed Event
 	OnUseItem.Broadcast();
+}
+
+void AUnrealSandboxCharacter::OnSecondaryAction()
+{
+	// Spawn the bomb
+	AFPSBombActor* MyBomb = GetWorld()->SpawnActor<AFPSBombActor>(BombClass, GetActorLocation(), GetActorRotation());
 }
 
 void AUnrealSandboxCharacter::BeginTouch(const ETouchIndex::Type FingerIndex, const FVector Location)

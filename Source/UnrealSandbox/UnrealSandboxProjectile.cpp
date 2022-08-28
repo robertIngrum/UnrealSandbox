@@ -38,6 +38,24 @@ void AUnrealSandboxProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* Other
 	{
 		OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
 
+		FVector Scale = OtherComp->GetComponentScale();
+		Scale *= 0.8f;
+
+		if (Scale.GetMin() < 0.5f)
+		{
+			OtherActor->Destroy();
+		}
+		else
+		{
+			OtherComp->SetWorldScale3D(Scale);
+		}
+
+		UMaterialInstanceDynamic* MatInst = OtherComp->CreateAndSetMaterialInstanceDynamic(0);
+		if (MatInst)
+		{
+			MatInst->SetVectorParameterValue(FName("Base Color"), FLinearColor::MakeRandomColor());
+		}
+
 		Destroy();
 	}
 }

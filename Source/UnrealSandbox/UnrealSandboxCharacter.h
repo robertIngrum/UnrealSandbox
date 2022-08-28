@@ -12,6 +12,7 @@ class USceneComponent;
 class UCameraComponent;
 class UAnimMontage;
 class USoundBase;
+class AFPSBombActor;
 
 // Declaration of the delegate that will be called when the Primary Action is triggered
 // It is declared as dynamic so it can be accessed also in Blueprints
@@ -44,10 +45,16 @@ public:
 	/** Delegate to whom anyone can subscribe to receive this event */
 	UPROPERTY(BlueprintAssignable, Category = "Interaction")
 	FOnUseItem OnUseItem;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Bombs")
+	TSubclassOf<AFPSBombActor> BombClass;
 protected:
 	
 	/** Fires a projectile. */
 	void OnPrimaryAction();
+
+	/** Spawns a bomb */
+	void OnSecondaryAction();
 
 	/** Handles moving forward/backward */
 	void MoveForward(float Val);
