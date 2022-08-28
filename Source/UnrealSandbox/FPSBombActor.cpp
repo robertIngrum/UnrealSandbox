@@ -1,7 +1,8 @@
 #include "FPSBombActor.h"
-#include "Kismet/GameplayStatics.h"
-#include "Engine/Engine.h"
 #include "Components/PrimitiveComponent.h"
+#include "Engine/Engine.h"
+#include "Kismet/GameplayStatics.h"
+#include "Math/Vector.h"
 #include "Materials/MaterialInstanceDynamic.h"
 
 // Sets default values
@@ -37,11 +38,16 @@ void AFPSBombActor::Explode()
 		UPrimitiveComponent* Overlap = Result.GetComponent();
 		if (Overlap && Overlap->IsSimulatingPhysics())
 		{
+			/** Apply Color */
 			UMaterialInstanceDynamic* MatInst = Overlap->CreateAndSetMaterialInstanceDynamic(0);
 			if (MatInst)
 			{
 				MatInst->SetVectorParameterValue(FName("Base Color"), TargetColor);
 			}
+
+			/** Apply Force */
+			FVector Force_Direction = GetActorLocation() - Overlap->GetComponentLocation();
+			Overlap->AddImpulseAtLocation(Force_Direction * 1000.0f, GetActorLocation());
 		}
 	}
 
